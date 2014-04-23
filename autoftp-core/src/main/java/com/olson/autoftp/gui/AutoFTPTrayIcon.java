@@ -36,7 +36,7 @@ public class AutoFTPTrayIcon
 		m_systemTray = SystemTray.getSystemTray();
 		try
 		{
-			Image image = Toolkit.getDefaultToolkit().getImage("icon.png");
+			Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icons/tray_icon.png");
 
 			MenuItem menuAbout = new MenuItem("About");
 			menuAbout.addActionListener(new AboutListener());

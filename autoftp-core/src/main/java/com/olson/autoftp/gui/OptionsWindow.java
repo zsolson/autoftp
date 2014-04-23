@@ -13,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,12 +25,12 @@ import javax.swing.SpinnerNumberModel;
 
 import com.olson.autoftp.FTPDirectory;
 import com.olson.autoftp.LocalDirectory;
-import com.olson.autoftp.Settings;
+import com.olson.autoftp.SettingsLoader;
 import com.olson.autoftp.Util;
 
-public class OptionsWindow extends JFrame
+public class OptionsWindow extends JDialog
 {
-	private Settings m_settings;
+	private SettingsLoader m_settings;
 	// Stored here so the window can update their settings when the Sabe button
 	// is clicked
 	private LocalDirectory m_localDirectory;
@@ -48,11 +49,11 @@ public class OptionsWindow extends JFrame
 	private JSpinner m_timeMinutesBox;
 	private JSpinner m_timeSecondsBox;
 
-	public OptionsWindow(Settings _settings, LocalDirectory _localDirectory, FTPDirectory _ftpDirectory)
+	public OptionsWindow(SettingsLoader _settings, LocalDirectory _localDirectory, FTPDirectory _ftpDirectory)
 	{
-		super("AutoFTP - Options");
+		super(new JFrame(), "AutoFTP - Options", ModalityType.APPLICATION_MODAL);
 		setVisible(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src/main/resources/icons/tray_icon.png"));
 		setLayout(new BorderLayout());
 
 		// Creates all the widgets inside the window
@@ -218,9 +219,9 @@ public class OptionsWindow extends JFrame
 
 	private class BrowseButtonListener implements ActionListener
 	{
-		private Frame parent;
+		private JDialog parent;
 
-		public BrowseButtonListener(Frame _parent)
+		public BrowseButtonListener(JDialog _parent)
 		{
 			parent = _parent;
 		}

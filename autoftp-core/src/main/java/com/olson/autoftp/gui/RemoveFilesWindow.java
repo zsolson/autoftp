@@ -37,7 +37,7 @@ public class RemoveFilesWindow extends JFrame
 		m_dir2 = dir2;
 
 		setVisible(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src/main/resources/icons/tray_icon.png"));
 		setLayout(new GridBagLayout());
 
 		// Gets directory tree from first directory to get a list of files,

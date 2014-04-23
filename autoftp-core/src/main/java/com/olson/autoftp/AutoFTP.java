@@ -7,7 +7,7 @@ import com.olson.autoftp.gui.RemoveFilesWindow;
 public class AutoFTP
 {
 	// Application configuration related
-	private Settings m_settings;
+	private SettingsLoader m_settings;
 
 	// Directory and merging relative objects
 	private LocalDirectory m_localDirectory;
@@ -23,8 +23,12 @@ public class AutoFTP
 
 	public AutoFTP()
 	{
-		m_settings = new Settings();
-		m_settings.load("settings.conf");
+		m_settings = new SettingsLoader();
+		if (m_settings.load("settings.conf"))
+		{
+			m_optionsWindow = new OptionsWindow(m_settings, m_localDirectory, ftpDirectory);
+			m_optionsWindow.setVisible(true);
+		}
 
 		m_localDirectory = new LocalDirectory(m_settings.getLocalDirectoryPath());
 		ftpDirectory = new FTPDirectory(m_settings.getFTPDirectoryAddress(), m_settings.getServerUsername(), m_settings.getServerPassword());
