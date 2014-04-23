@@ -1,17 +1,10 @@
-package com.olson.autoftp;
+package com.olson.autoftp.settings;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-
-import sun.misc.IOUtils;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -21,38 +14,36 @@ public class SettingsLoader
 {
 	private static Kryo m_serializer;
 	
-	private UserSettings m_userSettings;
+	private ConnectionSettings m_userSettings;
 
 	public SettingsLoader()
 	{
 		m_serializer = new Kryo();
-		m_serializer.setClassLoader(AutoFTP.class.getClassLoader());
+		m_serializer.setClassLoader(SettingsLoader.class.getClassLoader());
 	}
 
-	public boolean load(String m_sFilename)
+	public ConnectionSettings load(String m_sFilename)
 	{
 		try
 		{
 			Input input = new Input(new FileInputStream(m_sFilename));
-			UserSettings userSettings = m_serializer.readObject(input, UserSettings.class);
+			ConnectionSettings userSettings = m_serializer.readObject(input, ConnectionSettings.class);
 			input.close();
 
-			return true;
+			return userSettings;
 		}
 		catch (IOException e)
 		{
 			System.err.println("Could not load AutoFTP settings: " + e);
-			return false;
-
 		}
 		catch (NullPointerException e)
 		{
 			System.err.println("Could not load AutoFTP settings: " + e);
-			return false;
 		}
+		return null;
 	}
 
-	public boolean save(String _sFilename, UserSettings _settings)
+	public boolean save(String _sFilename, ConnectionSettings _settings)
 	{
 		try
 		{

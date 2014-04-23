@@ -161,7 +161,7 @@ public class OptionsWindow extends JDialog
 		m_usernameBox.setText(_userSettings.getServerUsername());
 		m_passwordBox.setText(_userSettings.getServerPassword());
 		// Deconstruct milliseconds in hours, minutes and seconds
-		long milliseconds = 0;;//TODO_userSettings.getTimeBetweenMerges();
+		long milliseconds = 0;//_userSettings.getTimeBetweenMerges();
 		int hours = (int) (milliseconds / 3600000);
 		milliseconds %= 3600000;
 		int minutes = (int) (milliseconds / 60000);

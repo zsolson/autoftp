@@ -3,6 +3,8 @@ package com.olson.autoftp;
 import com.olson.autoftp.gui.AutoFTPTrayIcon;
 import com.olson.autoftp.gui.OptionsWindow;
 import com.olson.autoftp.gui.RemoveFilesWindow;
+import com.olson.autoftp.settings.SettingsLoader;
+import com.olson.autoftp.settings.ConnectionSettings;
 
 public class AutoFTP
 {
@@ -24,19 +26,21 @@ public class AutoFTP
 	public AutoFTP()
 	{
 		m_settings = new SettingsLoader();
-		if (m_settings.load("settings.conf"))
+		ConnectionSettings settings = m_settings.load("settings.conf");
+		m_optionsWindow = new OptionsWindow(m_settings, settings, m_localDirectory, ftpDirectory);
+		while (settings == null)
 		{
-			m_optionsWindow = new OptionsWindow(m_settings, m_localDirectory, ftpDirectory);
 			m_optionsWindow.setVisible(true);
+			settings = m_settings.load("settings.conf");
 		}
 
-		m_localDirectory = new LocalDirectory(m_settings.getLocalDirectoryPath());
-		ftpDirectory = new FTPDirectory(m_settings.getFTPDirectoryAddress(), m_settings.getServerUsername(), m_settings.getServerPassword());
+		m_localDirectory = new LocalDirectory(settings.getLocalDirectoryPath());
+		ftpDirectory = new FTPDirectory(settings.getFTPDirectoryAddress(), settings.getServerUsername(), settings.getServerPassword());
 		m_merger = new Merger(m_localDirectory, ftpDirectory, new ChangeDetector());
 		m_lLastUpdate = System.currentTimeMillis();
-		m_lTimePassed = m_settings.getTimeBetweenMerges();
+//		m_lTimePassed = settings.getTimeBetweenMerges();
 
-		m_optionsWindow = new OptionsWindow(m_settings, m_localDirectory, ftpDirectory);
+		m_optionsWindow = new OptionsWindow(m_settings, settings, m_localDirectory, ftpDirectory);
 		m_removeFilesWindow = new RemoveFilesWindow(m_localDirectory, ftpDirectory);
 		m_trayIcon = new AutoFTPTrayIcon(m_optionsWindow, m_removeFilesWindow);
 	}
@@ -55,7 +59,7 @@ public class AutoFTP
 				m_lTimePassed += (System.currentTimeMillis() - m_lLastUpdate);
 				m_lLastUpdate = System.currentTimeMillis();
 
-				if (m_lTimePassed >= m_settings.getTimeBetweenMerges())
+				//if (m_lTimePassed >= m_settings.getTimeBetweenMerges())
 				{
 					// Don't merge if either the local directory or FTP
 					// directory
