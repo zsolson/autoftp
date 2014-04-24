@@ -9,9 +9,9 @@ public class Merger
 {
 	private VirtualDirectory m_dir1;
 	private VirtualDirectory m_dir2;
-	private ChangeDetector m_changeDetector;
+	private OldChangeDetector m_changeDetector;
 
-	public Merger(VirtualDirectory _dir1, VirtualDirectory _dir2, ChangeDetector _changeDetector)
+	public Merger(VirtualDirectory _dir1, VirtualDirectory _dir2, OldChangeDetector _changeDetector)
 	{
 		m_dir1 = _dir1;
 		m_dir2 = _dir2;

@@ -36,7 +36,7 @@ public class AutoFTP
 
 		m_localDirectory = new LocalDirectory(settings.getLocalDirectoryPath());
 		ftpDirectory = new FTPDirectory(settings.getFTPDirectoryAddress(), settings.getServerUsername(), settings.getServerPassword());
-		m_merger = new Merger(m_localDirectory, ftpDirectory, new ChangeDetector());
+		m_merger = new Merger(m_localDirectory, ftpDirectory, new OldChangeDetector());
 		m_lLastUpdate = System.currentTimeMillis();
 //		m_lTimePassed = settings.getTimeBetweenMerges();
 

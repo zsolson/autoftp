@@ -2,11 +2,11 @@ package com.olson.autoftp;
 
 import java.util.ArrayList;
 
-public class ChangeDetector
+public class OldChangeDetector
 {
 	private ArrayList<FileChange> m_listChanges;
 
-	public ChangeDetector()
+	public OldChangeDetector()
 	{
 		m_listChanges = new ArrayList<FileChange>();
 	}
