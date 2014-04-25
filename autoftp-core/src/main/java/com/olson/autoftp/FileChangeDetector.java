@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang3.StringUtils;
 
 public class FileChangeDetector
 {
@@ -33,6 +34,7 @@ public class FileChangeDetector
 		{
 			for (File file : collFoundFiles)
 			{
+//				StringUtils.removeStart(str, remove)
 				collFileNames.add(file.getPath());
 			}
 		}
