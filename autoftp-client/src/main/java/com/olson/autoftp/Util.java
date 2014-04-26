@@ -76,5 +76,10 @@ public class Util
 		}
 		return false;
 	}
+	
+	public static boolean isEmpty(String _s)
+	{
+		return _s != null && _s.length() > 0;
+	}
 
 }

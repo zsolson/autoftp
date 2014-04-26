@@ -15,8 +15,8 @@ public class TestSettingsLoader {
 	public void testSettingsLoader() 
 	{
 		SettingsLoader settingsLoader = new SettingsLoader();
-		ConnectionSettings connSettings = new ConnectionSettings(new VMID().toString(), new VMID().toString(), new VMID().toString(), new VMID().toString(), new VMID().toString(), new VMID().toString(), new VMID().toString());
-		ConnectionSettings loadedConnSettings = settingsLoader.load("test.conf");
+		ClientConnectionSettings connSettings = new ClientConnectionSettings(new VMID().toString(), new VMID().toString(), new VMID().toString(), new VMID().toString(), new VMID().toString(), new VMID().toString(), new VMID().toString());
+		ClientConnectionSettings loadedConnSettings = settingsLoader.load("test.conf");
 		assertNull(loadedConnSettings);
 		
 		settingsLoader.save("test.conf", connSettings);

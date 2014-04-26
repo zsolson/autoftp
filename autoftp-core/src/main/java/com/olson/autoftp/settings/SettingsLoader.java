@@ -14,7 +14,7 @@ public class SettingsLoader
 {
 	private static Kryo m_serializer;
 	
-	private ConnectionSettings m_userSettings;
+	private ClientConnectionSettings m_userSettings;
 
 	public SettingsLoader()
 	{
@@ -22,12 +22,12 @@ public class SettingsLoader
 		m_serializer.setClassLoader(SettingsLoader.class.getClassLoader());
 	}
 
-	public ConnectionSettings load(String m_sFilename)
+	public ClientConnectionSettings load(String m_sFilename)
 	{
 		try
 		{
 			Input input = new Input(new FileInputStream(m_sFilename));
-			ConnectionSettings userSettings = m_serializer.readObject(input, ConnectionSettings.class);
+			ClientConnectionSettings userSettings = m_serializer.readObject(input, ClientConnectionSettings.class);
 			input.close();
 
 			return userSettings;
@@ -43,7 +43,7 @@ public class SettingsLoader
 		return null;
 	}
 
-	public boolean save(String _sFilename, ConnectionSettings _settings)
+	public boolean save(String _sFilename, ClientConnectionSettings _settings)
 	{
 		try
 		{

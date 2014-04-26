@@ -27,30 +27,42 @@ import com.olson.autoftp.FTPDirectory;
 import com.olson.autoftp.LocalDirectory;
 import com.olson.autoftp.Util;
 import com.olson.autoftp.settings.SettingsLoader;
-import com.olson.autoftp.settings.ConnectionSettings;
+import com.olson.autoftp.settings.ClientConnectionSettings;
 
 public class OptionsWindow extends JDialog
 {
 	private SettingsLoader m_settings;
+	private ClientConnectionSettings m_clientSettings;
 	// Stored here so the window can update their settings when the Sabe button
 	// is clicked
 	private LocalDirectory m_localDirectory;
 	private FTPDirectory m_ftpDirectory;
+	
+//	private String m_sLocalDirectoryPath;
+//	private String m_sFTPDirectoryAddress;
+//	private String m_sServerUsername;
+//	private String m_sServerPassword;
+//	private String m_sNotifierServerAddress;
+//	private String m_sNotifierLocalPullPort;
+//	private String m_sNotifierServerPushPort;
 
-	private JPanel m_panel;
-	private JPanel m_panel2;
-	private JPanel m_panel3;
+	private JPanel m_localDirPanel;
+	private JPanel m_ftpSettingsPanel;
+	private JPanel m_notifierServerSettingsPanel;
+	private JPanel m_serverSettingsPanel;
+	private JPanel m_buttonPanel;
 
-	private JTextField m_localDirectoryBox;
-	private JTextField m_ftpAddressBox;
-	private JTextField m_usernameBox;
-	private JPasswordField m_passwordBox;
+	private JTextField m_localDirectoryTextField;
+	private JTextField m_ftpAddressTextField;
+	private JTextField m_serverUsernameTextField;
+	private JPasswordField m_serverPasswordTextField;
+	private JTextField m_notifierServerAddressTextField;
+	private JTextField m_notifierServerPullPortTextField;
+	private JTextField m_notifierServerPushPortTextField;
+	
 
-	private JSpinner m_timeHoursBox;
-	private JSpinner m_timeMinutesBox;
-	private JSpinner m_timeSecondsBox;
 
-	public OptionsWindow(SettingsLoader _settings, ConnectionSettings _userSettings, LocalDirectory _localDirectory, FTPDirectory _ftpDirectory)
+	public OptionsWindow(SettingsLoader _settings, ClientConnectionSettings _clientSettings, LocalDirectory _localDirectory, FTPDirectory _ftpDirectory)
 	{
 		super(new JFrame(), "AutoFTP - Options", ModalityType.APPLICATION_MODAL);
 		setVisible(false);
@@ -58,96 +70,117 @@ public class OptionsWindow extends JDialog
 		setLayout(new BorderLayout());
 
 		// Creates all the widgets inside the window
-		m_localDirectoryBox = new JTextField();
-		m_ftpAddressBox = new JTextField();
-		m_usernameBox = new JTextField();
-		m_passwordBox = new JPasswordField();
+		m_localDirectoryTextField = new JTextField();
+		m_ftpAddressTextField = new JTextField();
+		m_serverUsernameTextField = new JTextField();
+		m_serverPasswordTextField = new JPasswordField();
+		m_notifierServerAddressTextField = new JTextField();
+		m_notifierServerPullPortTextField = new JTextField();
+		m_notifierServerPushPortTextField = new JTextField();
 
-		m_timeHoursBox = new JSpinner();
-		m_timeHoursBox.setModel(new SpinnerNumberModel(0, 0, 1000, 1));
-		m_timeHoursBox.setSize(90, 32);
-		m_timeMinutesBox = new JSpinner();
-		m_timeMinutesBox.setModel(new SpinnerNumberModel(0, 0, 59, 1));
-		m_timeSecondsBox = new JSpinner();
-		m_timeSecondsBox.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 
-		JLabel tempLabel = null;
-
-		JPanel row1 = new JPanel();
-		row1.setLayout(new BoxLayout(row1, BoxLayout.LINE_AXIS));
-		tempLabel = new JLabel("Local Directory: ");
-		tempLabel.setToolTipText("Full path to the local directory.");
-		row1.add(tempLabel);
-		m_localDirectoryBox.setMaximumSize(new Dimension(250, 20));
-		row1.add(new Box.Filler(new Dimension(20, 0), new Dimension(20, 0), new Dimension(20, 0)));
-		row1.add(m_localDirectoryBox);
-		row1.add(new Box.Filler(new Dimension(10, 0), new Dimension(10, 0), new Dimension(10, 0)));
+		JPanel locaDirRow = new JPanel();
+		locaDirRow.setLayout(new BoxLayout(locaDirRow, BoxLayout.LINE_AXIS));
+		JLabel localDirectoryLabel = new JLabel("Local Directory: ");
+		localDirectoryLabel.setToolTipText("Full path to the local directory.");
+		locaDirRow.add(localDirectoryLabel);
+		m_localDirectoryTextField.setMaximumSize(new Dimension(250, 20));
+		locaDirRow.add(new Box.Filler(new Dimension(20, 0), new Dimension(20, 0), new Dimension(20, 0)));
+		locaDirRow.add(m_localDirectoryTextField);
+		locaDirRow.add(new Box.Filler(new Dimension(10, 0), new Dimension(10, 0), new Dimension(10, 0)));
 		JButton browseButton = new JButton("Browse");
 		browseButton.setMaximumSize(new Dimension(80, 20));
 		browseButton.addActionListener(new BrowseButtonListener(this));
-		row1.add(browseButton);
+		locaDirRow.add(browseButton);
 
-		JPanel row2 = new JPanel();
-		row2.setLayout(new BoxLayout(row2, BoxLayout.LINE_AXIS));
-		tempLabel = new JLabel("Server Address:");
-		tempLabel.setToolTipText("Address of the server that'll be communicating with the local directory.");
-		row2.add(tempLabel);
-		row2.add(new Box.Filler(new Dimension(20, 0), new Dimension(20, 0), new Dimension(20, 0)));
-		m_ftpAddressBox.setMaximumSize(new Dimension(200, 20));
-		row2.add(m_ftpAddressBox);
+		JPanel ftpAddressRow = new JPanel();
+		ftpAddressRow.setLayout(new BoxLayout(ftpAddressRow, BoxLayout.LINE_AXIS));
+		JLabel ftpAddressLabel = new JLabel("Server Address:");
+		ftpAddressLabel.setToolTipText("Address of the server that'll be communicating with the local directory.");
+		ftpAddressRow.add(ftpAddressLabel);
+		ftpAddressRow.add(new Box.Filler(new Dimension(20, 0), new Dimension(20, 0), new Dimension(20, 0)));
+		m_ftpAddressTextField.setMaximumSize(new Dimension(200, 20));
+		ftpAddressRow.add(m_ftpAddressTextField);
 
-		JPanel row3 = new JPanel();
-		row3.setLayout(new BoxLayout(row3, BoxLayout.LINE_AXIS));
-		tempLabel = new JLabel("Username: ");
-		tempLabel.setToolTipText("Username that will be used to communicate with the server.");
-		row3.add(tempLabel);
-		row3.add(new Box.Filler(new Dimension(47, 0), new Dimension(47, 0), new Dimension(47, 0)));
-		m_usernameBox.setMaximumSize(new Dimension(200, 20));
-		row3.add(m_usernameBox);
+		JPanel ftpUsernameRow = new JPanel();
+		ftpUsernameRow.setLayout(new BoxLayout(ftpUsernameRow, BoxLayout.LINE_AXIS));
+		JLabel serverUsernameLabel = new JLabel("Username: ");
+		serverUsernameLabel.setToolTipText("Username that will be used to communicate with the server.");
+		ftpUsernameRow.add(serverUsernameLabel);
+		ftpUsernameRow.add(new Box.Filler(new Dimension(47, 0), new Dimension(47, 0), new Dimension(47, 0)));
+		m_serverUsernameTextField.setMaximumSize(new Dimension(200, 20));
+		ftpUsernameRow.add(m_serverUsernameTextField);
 
-		JPanel row4 = new JPanel();
-		row4.setLayout(new BoxLayout(row4, BoxLayout.LINE_AXIS));
-		tempLabel = new JLabel("Password: ");
-		tempLabel.setToolTipText("Password of the username specified.");
-		row4.add(tempLabel);
-		row4.add(new Box.Filler(new Dimension(47, 0), new Dimension(47, 0), new Dimension(47, 0)));
-		m_passwordBox.setMaximumSize(new Dimension(200, 20));
-		row4.add(m_passwordBox);
+		JPanel ftpPasswordRow = new JPanel();
+		ftpPasswordRow.setLayout(new BoxLayout(ftpPasswordRow, BoxLayout.LINE_AXIS));
+		JLabel serverPasswordLabel = new JLabel("Password: ");
+		serverPasswordLabel.setToolTipText("Password of the username specified.");
+		ftpPasswordRow.add(serverPasswordLabel);
+		ftpPasswordRow.add(new Box.Filler(new Dimension(47, 0), new Dimension(47, 0), new Dimension(47, 0)));
+		m_serverPasswordTextField.setMaximumSize(new Dimension(200, 20));
+		ftpPasswordRow.add(m_serverPasswordTextField);
 
-		m_panel = new JPanel(new GridLayout(4, 0));
-		m_panel.setSize(0, 300);
-		m_panel.setBorder(BorderFactory.createTitledBorder("Directory Settings"));
-		m_panel.add(row1);
-		m_panel.add(row2);
-		m_panel.add(row3);
-		m_panel.add(row4);
-		m_panel.setMaximumSize(new Dimension(200, 290));
+		JPanel notifierServerAddressRow = new JPanel();
+		notifierServerAddressRow.setLayout(new BoxLayout(notifierServerAddressRow, BoxLayout.LINE_AXIS));
+		JLabel notifierServerAddressLabel = new JLabel("Notifier Server Address:");
+		notifierServerAddressRow.add(notifierServerAddressLabel);
+		notifierServerAddressRow.add(new Box.Filler(new Dimension(20, 0), new Dimension(20, 0), new Dimension(20, 0)));
+		m_notifierServerAddressTextField.setMaximumSize(new Dimension(200, 20));
+		notifierServerAddressRow.add(m_notifierServerAddressTextField);
 
-		m_panel2 = new JPanel();
-		m_panel2.setBorder(BorderFactory.createTitledBorder("Time Between Merges"));
-		m_panel2.setToolTipText("The APPROXIMATE frequency both directories are merged.");
-		m_panel2.add(m_timeHoursBox);
-		m_panel2.add(new JLabel("hours"));
-		m_panel2.add(m_timeMinutesBox);
-		m_panel2.add(new JLabel("minutes"));
-		m_panel2.add(m_timeSecondsBox);
-		m_panel2.add(new JLabel("seconds"));
+		JPanel notifierServerPullPortRow = new JPanel();
+		notifierServerPullPortRow.setLayout(new BoxLayout(notifierServerPullPortRow, BoxLayout.LINE_AXIS));
+		JLabel notifierServerPullPortLabel = new JLabel("Notifier Server Pull Request Port: ");
+		notifierServerPullPortLabel.setToolTipText("Port that the Notifier Server will use to notify clients of new files to retrieve.");
+		notifierServerPullPortRow.add(notifierServerPullPortLabel);
+		notifierServerPullPortRow.add(new Box.Filler(new Dimension(47, 0), new Dimension(47, 0), new Dimension(47, 0)));
+		m_notifierServerPullPortTextField.setMaximumSize(new Dimension(200, 20));
+		notifierServerPullPortRow.add(m_notifierServerPullPortTextField);
 
-		m_panel3 = new JPanel();
+		JPanel notifierServerPushPortRow = new JPanel();
+		notifierServerPushPortRow.setLayout(new BoxLayout(notifierServerPushPortRow, BoxLayout.LINE_AXIS));
+		JLabel notifierServerPushPortLabel = new JLabel("Notifier Server Push Request Port: ");
+		notifierServerPushPortLabel.setToolTipText("Port that the Client will use to inform the Notifier Server of new files to be uploaded.");
+		notifierServerPushPortRow.add(notifierServerPushPortLabel);
+		notifierServerPushPortRow.add(new Box.Filler(new Dimension(47, 0), new Dimension(47, 0), new Dimension(47, 0)));
+		m_notifierServerPushPortTextField.setMaximumSize(new Dimension(200, 20));
+		notifierServerPushPortRow.add(m_notifierServerPushPortTextField);
+
+		m_localDirPanel = new JPanel(new GridLayout(1, 0));
+		m_localDirPanel.setBorder(BorderFactory.createTitledBorder("Local Directory Settings"));
+		m_localDirPanel.add(locaDirRow);
+
+		m_ftpSettingsPanel = new JPanel(new GridLayout(3, 0));
+		m_ftpSettingsPanel.setBorder(BorderFactory.createTitledBorder("FTP Server Settings"));
+		m_ftpSettingsPanel.add(ftpAddressRow);
+		m_ftpSettingsPanel.add(ftpUsernameRow);
+		m_ftpSettingsPanel.add(ftpPasswordRow);
+		
+		m_notifierServerSettingsPanel = new JPanel(new GridLayout(3, 0));
+		m_notifierServerSettingsPanel.setBorder(BorderFactory.createTitledBorder("Notifier Server Settings"));
+		m_notifierServerSettingsPanel.add(notifierServerAddressRow);
+		m_notifierServerSettingsPanel.add(notifierServerPullPortRow);
+		m_notifierServerSettingsPanel.add(notifierServerPushPortRow);
+		
+		m_serverSettingsPanel = new JPanel(new GridLayout(2, 0));
+		m_serverSettingsPanel.add(m_ftpSettingsPanel);
+		m_serverSettingsPanel.add(m_notifierServerSettingsPanel);
+
+		m_buttonPanel = new JPanel();
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new OKButtonListener());
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new CancelButtonListener());
-		m_panel3.add(okButton);
-		m_panel3.add(cancelButton);
+		m_buttonPanel.add(okButton);
+		m_buttonPanel.add(cancelButton);
 
 		// Adds all the necessary components to the frame
-		add(m_panel, BorderLayout.NORTH);
-		add(m_panel2, BorderLayout.CENTER);
-		add(m_panel3, BorderLayout.SOUTH);
+		add(m_localDirPanel, BorderLayout.NORTH);
+		add(m_serverSettingsPanel, BorderLayout.CENTER);
+		add(m_buttonPanel, BorderLayout.SOUTH);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		pack();
-		setSize(490, 250);
+		setSize(490, 500);
 		setResizable(false);
 		// Centers the window
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -156,21 +189,17 @@ public class OptionsWindow extends JDialog
 
 		// Now store the given application settings and set appropriate defaults
 		m_settings = _settings;
-		m_localDirectoryBox.setText(_userSettings.getLocalDirectoryPath());
-		m_ftpAddressBox.setText(_userSettings.getFTPDirectoryAddress());
-		m_usernameBox.setText(_userSettings.getServerUsername());
-		m_passwordBox.setText(_userSettings.getServerPassword());
-		// Deconstruct milliseconds in hours, minutes and seconds
-		long milliseconds = 0;//_userSettings.getTimeBetweenMerges();
-		int hours = (int) (milliseconds / 3600000);
-		milliseconds %= 3600000;
-		int minutes = (int) (milliseconds / 60000);
-		milliseconds %= 60000;
-		int seconds = (int) (milliseconds / 1000);
-		m_timeHoursBox.setValue(hours);
-		m_timeMinutesBox.setValue(minutes);
-		m_timeSecondsBox.setValue(seconds);
-
+		m_clientSettings = _clientSettings;
+		if (m_clientSettings != null)
+		{
+			m_localDirectoryTextField.setText(m_clientSettings.getLocalDirectoryPath());
+			m_ftpAddressTextField.setText(m_clientSettings.getFTPDirectoryAddress());
+			m_serverUsernameTextField.setText(m_clientSettings.getServerUsername());
+			m_serverPasswordTextField.setText(m_clientSettings.getServerPassword());
+			m_notifierServerAddressTextField.setText(m_clientSettings.getNotifierServerAddress());
+			m_notifierServerPullPortTextField.setText(m_clientSettings.getNotifierLocalPullPort());
+			m_notifierServerPushPortTextField.setText(m_clientSettings.getNotifierServerPushPort());
+		}
 		m_localDirectory = _localDirectory;
 		m_ftpDirectory = _ftpDirectory;
 	}
@@ -206,6 +235,19 @@ public class OptionsWindow extends JDialog
 //
 //			m_settings.save("settings.conf");
 //			setVisible(false);
+
+			if (m_clientSettings == null)
+				m_clientSettings = new ClientConnectionSettings();
+			
+			m_clientSettings.setLocalDirectoryPath(m_localDirectoryTextField.getText());
+			m_clientSettings.setFTPDirectoryAddress(m_ftpAddressTextField.getText());
+			m_clientSettings.setServerUsername(m_serverUsernameTextField.getText());
+			m_clientSettings.setServerPassword(String.valueOf(m_serverPasswordTextField.getPassword()));
+			m_clientSettings.setNotifierServerAddress(m_notifierServerAddressTextField.getText());
+			m_clientSettings.setNotifierLocalPullPort(m_notifierServerPullPortTextField.getText());
+			m_clientSettings.setNotifierServerPushPort(m_notifierServerPushPortTextField.getText());
+			m_settings.save("settings.conf", m_clientSettings);
+			setVisible(false);
 		}
 	}
 
@@ -238,7 +280,7 @@ public class OptionsWindow extends JDialog
 			if (selectedDirectory != null && selectedDirectory.isDirectory())
 			{
 				String path = Util.toUnixPath(selectedDirectory.getPath()) + "/";
-				m_localDirectoryBox.setText(path);
+				m_localDirectoryTextField.setText(path);
 			}
 
 		}

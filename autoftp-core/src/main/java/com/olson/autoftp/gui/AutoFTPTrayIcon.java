@@ -20,7 +20,7 @@ public class AutoFTPTrayIcon
 	private PopupMenu m_disabledMenu;
 	private MenuItem m_menuPauseResume;
 
-	private OptionsWindow m_optionsWindow;
+	//private OptionsWindow m_optionsWindow;
 	private RemoveFilesWindow m_removeFilesWindow;
 
 	private boolean m_bActive;
@@ -28,7 +28,7 @@ public class AutoFTPTrayIcon
 	private boolean m_bPaused;
 	private boolean m_bLocked;
 
-	public AutoFTPTrayIcon(OptionsWindow _optionsWindow, RemoveFilesWindow _removeFilesWindow) throws RuntimeException
+	public AutoFTPTrayIcon(/*OptionsWindow _optionsWindow, */RemoveFilesWindow _removeFilesWindow) throws RuntimeException
 	{
 		if (!SystemTray.isSupported())
 			throw new RuntimeException("System tray is not supported on this platform!");
@@ -70,7 +70,7 @@ public class AutoFTPTrayIcon
 			System.err.println(e);
 		}
 
-		m_optionsWindow = _optionsWindow;
+		//m_optionsWindow = _optionsWindow;
 		m_removeFilesWindow = _removeFilesWindow;
 
 		m_bActive = true;
@@ -81,7 +81,7 @@ public class AutoFTPTrayIcon
 
 	public void update()
 	{
-		if (m_optionsWindow.isVisible() || m_removeFilesWindow.isVisible())
+		if (/*m_optionsWindow.isVisible() || */m_removeFilesWindow.isVisible())
 		{
 			m_bBusy = true;
 		}
@@ -143,7 +143,7 @@ public class AutoFTPTrayIcon
 		{
 			if (!m_bLocked)
 			{
-				m_optionsWindow.setVisible(true);
+//				m_optionsWindow.setVisible(true);
 			}
 		}
 	}

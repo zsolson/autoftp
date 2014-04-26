@@ -4,9 +4,9 @@ import com.olson.autoftp.gui.AutoFTPTrayIcon;
 import com.olson.autoftp.gui.OptionsWindow;
 import com.olson.autoftp.gui.RemoveFilesWindow;
 import com.olson.autoftp.settings.SettingsLoader;
-import com.olson.autoftp.settings.ConnectionSettings;
+import com.olson.autoftp.settings.ClientConnectionSettings;
 
-public class AutoFTP
+public class AutoFTPClient
 {
 	// Application configuration related
 	private SettingsLoader m_settings;
@@ -23,12 +23,12 @@ public class AutoFTP
 	private OptionsWindow m_optionsWindow;
 	private RemoveFilesWindow m_removeFilesWindow;
 
-	public AutoFTP()
+	public AutoFTPClient()
 	{
 		m_settings = new SettingsLoader();
-		ConnectionSettings settings = m_settings.load("settings.conf");
+		ClientConnectionSettings settings = m_settings.load("settings.conf");
 		m_optionsWindow = new OptionsWindow(m_settings, settings, m_localDirectory, ftpDirectory);
-		while (settings == null)
+		while (!isSettingsValid(settings))
 		{
 			m_optionsWindow.setVisible(true);
 			settings = m_settings.load("settings.conf");
@@ -43,6 +43,15 @@ public class AutoFTP
 		m_optionsWindow = new OptionsWindow(m_settings, settings, m_localDirectory, ftpDirectory);
 		m_removeFilesWindow = new RemoveFilesWindow(m_localDirectory, ftpDirectory);
 		m_trayIcon = new AutoFTPTrayIcon(m_optionsWindow, m_removeFilesWindow);
+	}
+	
+	private boolean isSettingsValid(ClientConnectionSettings _settings)
+	{
+		if (_settings == null)
+			return false;
+		
+		return false;
+//		if (Util.isEmpty(_settings.getLocalDirectoryPath()) || Util.isEmpty(_settings.getFTPDirectoryAddress()) || Util.isEmpty(_settings.getServerUsername()) || Util.isEmpty(_settings.getServerPassword()) || )
 	}
 
 	public void run()
@@ -95,13 +104,13 @@ public class AutoFTP
 	{
 		try
 		{
-			AutoFTP program = new AutoFTP();
+			AutoFTPClient program = new AutoFTPClient();
 			program.run();
 			program.dispose();
 		}
 		catch (Exception e)
 		{
-			System.err.println(e);
+			e.printStackTrace();
 		}
 
 		System.out.println("------------END------------");

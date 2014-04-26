@@ -2,7 +2,7 @@ package com.olson.autoftp.settings;
 
 import com.olson.autoftp.Util;
 
-public class ConnectionSettings
+public class ClientConnectionSettings
 {
 	private String m_sLocalDirectoryPath;
 	private String m_sFTPDirectoryAddress;
@@ -12,14 +12,12 @@ public class ConnectionSettings
 	private String m_sNotifierLocalPullPort;
 	private String m_sNotifierServerPushPort;
 	
-	/**
-	 * Do not use. Only for Kryo
-	 */
-	public ConnectionSettings()
+	
+	public ClientConnectionSettings()
 	{
 	}
 	
-	public ConnectionSettings(String _sLocalDirectoryPath, String _sFTPDirectoryAddress,
+	public ClientConnectionSettings(String _sLocalDirectoryPath, String _sFTPDirectoryAddress,
 			String _sServerUsername, String _sServerPassword, String _sNotifierServerAddress,
 			String _sNotifierLocalPullPort, String _sNotifierServerPushPort)
 	{
@@ -37,9 +35,19 @@ public class ConnectionSettings
 		return m_sLocalDirectoryPath;
 	}
 	
+	public void setLocalDirectoryPath(String _sLocalDirectoryPath)
+	{
+		m_sLocalDirectoryPath = _sLocalDirectoryPath;
+	}
+	
 	public String getFTPDirectoryAddress()
 	{
 		return m_sFTPDirectoryAddress;
+	}
+	
+	public void setFTPDirectoryAddress(String _sFTPDirectoryAddress)
+	{
+		m_sFTPDirectoryAddress = _sFTPDirectoryAddress;
 	}
 	
 	public String getServerUsername()
@@ -47,9 +55,19 @@ public class ConnectionSettings
 		return m_sServerUsername;
 	}
 	
+	public void setServerUsername(String _sServerUsername)
+	{
+		m_sServerUsername = _sServerUsername;
+	}
+	
 	public String getServerPassword()
 	{
 		return m_sServerPassword;
+	}
+	
+	public void setServerPassword(String _sServerPassword)
+	{
+		m_sServerPassword = _sServerPassword;
 	}
 	
 	public String getNotifierServerAddress()
@@ -57,9 +75,19 @@ public class ConnectionSettings
 		return m_sNotifierServerAddress;
 	}
 	
+	public void setNotifierServerAddress(String _sNotifierServerAddress)
+	{
+		m_sNotifierServerAddress = _sNotifierServerAddress;
+	}
+	
 	public String getNotifierLocalPullPort()
 	{
 		return m_sNotifierLocalPullPort;
+	}
+	
+	public void setNotifierLocalPullPort(String _sNotifierLocalPullPort)
+	{
+		m_sNotifierLocalPullPort = _sNotifierLocalPullPort;
 	}
 	
 	public String getNotifierServerPushPort()
@@ -67,13 +95,18 @@ public class ConnectionSettings
 		return m_sNotifierServerPushPort;
 	}
 	
+	public void setNotifierServerPushPort(String _sNotifierServerPushPort)
+	{
+		m_sNotifierServerPushPort = _sNotifierServerPushPort;
+	}
+	
 	@Override
 	public boolean equals(Object _obj) 
 	{
-		if (!(_obj instanceof ConnectionSettings))
+		if (!(_obj instanceof ClientConnectionSettings))
 			return false;
 		
-		ConnectionSettings otherSettings = (ConnectionSettings) _obj;
+		ClientConnectionSettings otherSettings = (ClientConnectionSettings) _obj;
 		
 		boolean bIsEqual = Util.isStringsEqual(getLocalDirectoryPath(), otherSettings.getLocalDirectoryPath());
 		if (!bIsEqual)
