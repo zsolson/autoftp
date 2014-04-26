@@ -16,6 +16,6 @@ public interface VirtualDirectory
 
 	FileNode getDirectoryTree();
 
-	boolean enabled();
+	boolean exists();
 
 }

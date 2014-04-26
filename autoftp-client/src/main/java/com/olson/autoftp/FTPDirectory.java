@@ -37,17 +37,22 @@ public class FTPDirectory implements VirtualDirectory
 		m_sUsername = _sUsername;
 		m_sPassword = _sPassword;
 
-		m_ftpClient = new FTPClient();
-		establishConnection();
+		
 
-		String temp = Util.readFileAsString("text_extensions.conf");
-		m_listTextExtensions = Arrays.asList(temp.split(" "));
-
-		m_timer = new Timer();
-		m_noopThread = new NoOpTask();
-		m_timer.schedule(m_noopThread, 0, 10000); // send NOOP to server every
+//		String temp = Util.readFileAsString("text_extensions.conf");
+//		m_listTextExtensions = Arrays.asList(temp.split(" "));
+//
+//		m_timer = new Timer();
+//		m_noopThread = new NoOpTask();
+//		m_timer.schedule(m_noopThread, 0, 10000); // send NOOP to server every
 													// 10
 													// seconds
+	}
+	
+	public void connect()
+	{
+		m_ftpClient = new FTPClient();
+		establishConnection();
 	}
 
 	public void setAddress(String _sNewAddress, String _sNewUsername, String _sNewPassword)
@@ -78,6 +83,7 @@ public class FTPDirectory implements VirtualDirectory
 			{
 				m_ftpClient.connect(m_sServerAddress);
 				m_ftpClient.login(m_sUsername, m_sPassword);
+				m_ftpClient.enterLocalPassiveMode();
 
 				m_ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 				m_bEnabled = true;
@@ -218,10 +224,10 @@ public class FTPDirectory implements VirtualDirectory
 			// Unfortunately, since there is no method for checking the encoding
 			// of a file in FTPFile, we have to just make an educated guess by
 			// checking the extension of the file.
-			if (Util.isExtension(m_listTextExtensions, Util.getExtension(_file)))
-			{
-				m_ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
-			}
+//			if (Util.isExtension(m_listTextExtensions, Util.getExtension(_file)))
+//			{
+//				m_ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
+//			}
 
 			InputStream input = m_ftpClient.retrieveFileStream(Util.toUnixPath(_file.getPath()));
 			m_ftpClient.completePendingCommand();
@@ -316,7 +322,7 @@ public class FTPDirectory implements VirtualDirectory
 	}
 
 	@Override
-	public boolean enabled()
+	public boolean exists()
 	{
 		return m_bEnabled;
 	}

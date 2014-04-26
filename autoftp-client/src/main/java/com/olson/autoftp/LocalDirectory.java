@@ -162,7 +162,7 @@ public class LocalDirectory implements VirtualDirectory
 	}
 
 	@Override
-	public boolean enabled()
+	public boolean exists()
 	{
 		return m_bEnabled;
 	}

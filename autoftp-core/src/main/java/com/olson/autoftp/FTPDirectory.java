@@ -218,10 +218,10 @@ public class FTPDirectory implements VirtualDirectory
 			// Unfortunately, since there is no method for checking the encoding
 			// of a file in FTPFile, we have to just make an educated guess by
 			// checking the extension of the file.
-			if (Util.isExtension(m_listTextExtensions, Util.getExtension(_file)))
-			{
-				m_ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
-			}
+//			if (Util.isExtension(m_listTextExtensions, Util.getExtension(_file)))
+//			{
+//				m_ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
+//			}
 
 			InputStream input = m_ftpClient.retrieveFileStream(Util.toUnixPath(_file.getPath()));
 			m_ftpClient.completePendingCommand();
