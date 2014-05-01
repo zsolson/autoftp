@@ -246,7 +246,7 @@ public class OptionsWindow extends JDialog
 			m_clientSettings.setNotifierServerAddress(m_notifierServerAddressTextField.getText());
 			m_clientSettings.setNotifierLocalPullPort(m_notifierServerPullPortTextField.getText());
 			m_clientSettings.setNotifierServerPushPort(m_notifierServerPushPortTextField.getText());
-			m_settings.save("settings.conf", m_clientSettings);
+			m_settings.save(m_clientSettings);
 			setVisible(false);
 		}
 	}

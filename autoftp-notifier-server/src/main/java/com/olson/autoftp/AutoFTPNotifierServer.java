@@ -16,10 +16,10 @@ import com.olson.autoftp.gui.AutoFTPTrayIcon;
 import com.olson.autoftp.gui.OptionsWindow;
 import com.olson.autoftp.gui.RemoveFilesWindow;
 import com.olson.autoftp.request.FilePullRequest;
-import com.olson.autoftp.settings.ClientConnectionSettings;
+import com.olson.autoftp.settings.ServerConnectionSettings;
 import com.olson.autoftp.settings.SettingsLoader;
 
-public class AutoFTPClient {
+public class AutoFTPNotifierServer {
 	// Application configuration related
 	private SettingsLoader m_settings;
 
@@ -43,54 +43,54 @@ public class AutoFTPClient {
 	
 	private Kryo m_serializer;
 
-	public AutoFTPClient() 
+	public AutoFTPNotifierServer() 
 	{
 		m_serializer = new Kryo();
-		m_serializer.setClassLoader(AutoFTPClient.class.getClassLoader());
+		m_serializer.setClassLoader(AutoFTPNotifierServer.class.getClassLoader());
 		m_settings = new SettingsLoader();
-		ClientConnectionSettings settings = m_settings.loadClientSettings();
+		ServerConnectionSettings settings = m_settings.loadServerSettings();
 		m_optionsWindow = new OptionsWindow(m_settings, settings,
 				m_localDirectory, m_ftpDirectory);
 		while (!init(settings)) {
 			m_optionsWindow.setVisible(true);
-			settings = m_settings.loadClientSettings();
+			settings = m_settings.loadServerSettings();
 		}
 
-		m_localDirectory = new LocalDirectory(settings.getLocalDirectoryPath());
-		m_ftpDirectory = new FTPDirectory(settings.getFTPDirectoryAddress(),
-				settings.getServerUsername(), settings.getServerPassword());
-		m_merger = new Merger(m_localDirectory, m_ftpDirectory,
-				new OldChangeDetector());
-		m_lLastUpdate = System.currentTimeMillis();
-		// m_lTimePassed = settings.getTimeBetweenMerges();
-
-//		m_optionsWindow = new OptionsWindow(m_settings, settings,
-//				m_localDirectory, m_ftpDirectory);
+//		m_localDirectory = new LocalDirectory(settings.getLocalDirectoryPath());
+//		m_ftpDirectory = new FTPDirectory(settings.getFTPDirectoryAddress(),
+//				settings.getServerUsername(), settings.getServerPassword());
+//		m_merger = new Merger(m_localDirectory, m_ftpDirectory,
+//				new OldChangeDetector());
+//		m_lLastUpdate = System.currentTimeMillis();
+//		// m_lTimePassed = settings.getTimeBetweenMerges();
+//
+////		m_optionsWindow = new OptionsWindow(m_settings, settings,
+////				m_localDirectory, m_ftpDirectory);
 		m_removeFilesWindow = new RemoveFilesWindow(m_localDirectory,
 				m_ftpDirectory);
 		m_trayIcon = new AutoFTPTrayIcon(m_optionsWindow, m_removeFilesWindow);
 	}
 
-	private boolean init(ClientConnectionSettings _settings) {
+	private boolean init(ServerConnectionSettings _settings) {
 		if (_settings == null)
 			return false;
-
-		if (Util.isEmpty(_settings.getLocalDirectoryPath())
-				|| Util.isEmpty(_settings.getFTPDirectoryAddress())
-				|| Util.isEmpty(_settings.getServerUsername())
-				|| Util.isEmpty(_settings.getServerPassword())
-				|| Util.isEmpty(_settings.getNotifierServerAddress())
-				|| Util.isEmpty(_settings.getNotifierLocalPullPort())
-				|| Util.isEmpty(_settings.getNotifierServerPushPort()))
-			return false;
-
-		m_localDirectory = new LocalDirectory(_settings.getLocalDirectoryPath());
-		if (!m_localDirectory.exists())
-			return false;
-
-		m_ftpDirectory = new FTPDirectory(/*_settings.getFTPDirectoryAddress()*/"localhost", _settings.getServerUsername(), _settings.getServerPassword());
-
-		m_iPortNumber = Integer.parseInt(_settings.getNotifierLocalPullPort());
+		
+//		if (Util.isEmpty(_settings.getLocalDirectoryPath())
+//				|| Util.isEmpty(_settings.getFTPDirectoryAddress())
+//				|| Util.isEmpty(_settings.getServerUsername())
+//				|| Util.isEmpty(_settings.getServerPassword())
+//				|| Util.isEmpty(_settings.getNotifierServerAddress())
+//				|| Util.isEmpty(_settings.getNotifierLocalPullPort())
+//				|| Util.isEmpty(_settings.getNotifierServerPushPort()))
+//			return false;
+//
+//		m_localDirectory = new LocalDirectory(_settings.getLocalDirectoryPath());
+//		if (!m_localDirectory.exists())
+//			return false;
+//
+//		m_ftpDirectory = new FTPDirectory(/*_settings.getFTPDirectoryAddress()*/"localhost", _settings.getServerUsername(), _settings.getServerPassword());
+//
+//		m_iPortNumber = Integer.parseInt(_settings.getNotifierLocalPullPort());
 
 //		try 
 //		{
@@ -247,7 +247,7 @@ public class AutoFTPClient {
 
 	public static void main(String[] _args) {
 		try {
-			AutoFTPClient program = new AutoFTPClient();
+			AutoFTPNotifierServer program = new AutoFTPNotifierServer();
 			program.run();
 			program.dispose();
 		} catch (Exception e) {

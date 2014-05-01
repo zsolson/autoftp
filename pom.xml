@@ -8,5 +8,6 @@
   <modules>
     <module>autoftp-core</module>
     <module>autoftp-client</module>
+    <module>autoftp-notifier-server</module>
   </modules>
 </project>

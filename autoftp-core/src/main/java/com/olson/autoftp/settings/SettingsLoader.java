@@ -13,6 +13,8 @@ import com.esotericsoftware.kryo.io.Output;
 public class SettingsLoader
 {
 	private static Kryo m_serializer;
+	private static String CLIENT_SETTINGS_FILE_NAME = "client_settings.autoftp";
+	private static String SERVER_SETTINGS_FILE_NAME = "server_settings.autoftp";
 	
 	private ClientConnectionSettings m_userSettings;
 
@@ -22,15 +24,25 @@ public class SettingsLoader
 		m_serializer.setClassLoader(SettingsLoader.class.getClassLoader());
 	}
 
-	public ClientConnectionSettings load(String m_sFilename)
+	public ClientConnectionSettings loadClientSettings()
+	{
+		return load(ClientConnectionSettings.class, CLIENT_SETTINGS_FILE_NAME);
+	}
+
+	public ServerConnectionSettings loadServerSettings()
+	{
+		return load(ServerConnectionSettings.class, SERVER_SETTINGS_FILE_NAME);
+	}
+	
+	private <T> T load(Class<T> _clazz, String _sFileName)
 	{
 		try
 		{
-			Input input = new Input(new FileInputStream(m_sFilename));
-			ClientConnectionSettings userSettings = m_serializer.readObject(input, ClientConnectionSettings.class);
+			Input input = new Input(new FileInputStream(_sFileName));
+			T settings = m_serializer.readObject(input, _clazz);
 			input.close();
 
-			return userSettings;
+			return settings;
 		}
 		catch (IOException e)
 		{
@@ -43,11 +55,21 @@ public class SettingsLoader
 		return null;
 	}
 
-	public boolean save(String _sFilename, ClientConnectionSettings _settings)
+	public boolean save(ClientConnectionSettings _settings)
+	{
+		return save(_settings, CLIENT_SETTINGS_FILE_NAME);
+	}
+	
+	public boolean save(ServerConnectionSettings _settings)
+	{
+		return save(_settings, SERVER_SETTINGS_FILE_NAME);
+	}
+	
+	private <T> boolean save(T _settings, String _sFileName)
 	{
 		try
 		{
-			Output output = new Output(new FileOutputStream(new File(_sFilename)));
+			Output output = new Output(new FileOutputStream(new File(_sFileName)));
 			m_serializer.writeObject(output, _settings);
 			output.close();
 			return true;

@@ -76,6 +76,23 @@ public class Util
 		}
 		return false;
 	}
+	
+	public static <T> boolean isEqual(T _a, T _b)
+	{
+		if (_a != null)
+		{
+			if (_b == null)
+				return false;
+			else if (_a.equals(_b))
+				return true;
+		}
+		else if (_a == null)
+		{
+			if (_b == null)
+				return true;
+		}
+		return false;
+	}
 
 	public static boolean isEmpty(String _s)
 	{
